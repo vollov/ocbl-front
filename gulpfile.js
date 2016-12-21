@@ -8,7 +8,9 @@ var nano = require('gulp-cssnano');
 //Process JS files
 gulp.task('minify-js', function() {
   return gulp.src([
-      'app/js/app.js'
+      'app/js/app.js',
+      'app/js/auth/auth.module.js',
+      'app/js/auth/auth.controller.js',
     ]) //Source files
     .pipe(concat("ocbl.min.js"))
     .pipe(uglify())
