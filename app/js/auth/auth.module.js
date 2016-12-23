@@ -15,7 +15,8 @@ angular.module('auth', ['auth.controllers','ui.router'])
   .state('register', {
 		url : '/register',
 		templateUrl : 'js/auth/views/register.html',
-		// controller : 'AuthCtrl',
+		controller : 'AuthCtrl',
+		controllerAs: 'vm'
 		// resolve: {
 		// 	confPromise: ['confService', function(confService){
 		// 		return userService.load();

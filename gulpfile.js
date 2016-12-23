@@ -11,6 +11,7 @@ gulp.task('minify-js', function() {
       'app/js/app.js',
       'app/js/auth/auth.module.js',
       'app/js/auth/auth.controller.js',
+      'app/js/auth/auth.service.js',
     ]) //Source files
     .pipe(concat("ocbl.min.js"))
     .pipe(uglify())

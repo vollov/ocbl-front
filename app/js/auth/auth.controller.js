@@ -1,9 +1,10 @@
 'use strict';
 
-angular.module('auth.controllers', [])
+angular.module('auth.controllers', ['auth.services'])
 .controller('NavCtrl', [function(){
 
-}]).controller('AuthCtrl', ['$state', 'AuthService',
+}])
+.controller('AuthCtrl', ['$state', 'AuthService',
 function($state, AuthService) {
   var vm = this;
 
@@ -26,4 +27,24 @@ function($state, AuthService) {
 	// 		$state.go('users');
 	// 	});
 	// };
+}])
+.controller('LoginController', ['$state', 'AuthService',
+function($state, AuthService) {
+  var vm = this;
+
+	vm.user = {};
+
+  activate();
+
+  function activate() {
+    // If the user is authenticated, they should not be here.
+    if (AuthService.isAuthenticated()) {
+      $location.url('/');
+    }
+  }
+
+  vm.login = function(){
+    Authentication.login(vm.email, vm.password);
+  }
+
 }]);
