@@ -1,12 +1,34 @@
 'use strict';
 
-angular.module('auth.services', [])
-.factory('AuthService', [ '$http', '$cookies', 'API', function($http, $cookies, API) {
+angular.module('auth.services', ['ngCookies'])
+.constant('host', 'http://localhost:5001')
+.constant('clientToken', 'ocbl-client-token')
+.factory('AuthService', [ '$http', '$cookies', 'API', 'host', 'clientToken', function($http, $cookies, API, host, clientToken) {
 
 	var service = {
 			users : [],
 			groups : [],
 			key: 'user-list',
+	};
+
+	service.saveToken = function(token){
+		localStorage[clientToken] = token;
+	}
+
+	service.getToken = function() {
+		return localStorage[clientToken];
+	}
+
+	service.isLoggedIn = function() {
+		var token = service.getToken();
+		//console.log('in auth.isLoggedIn token=' + token);
+		if (token && token != 'undefined') {
+			var payload = JSON.parse($window.atob(token.split('.')[1]));
+
+			return payload.exp > Date.now() / 1000;
+		} else {
+			return false;
+		}
 	};
 
   /**
@@ -17,16 +39,14 @@ angular.module('auth.services', [])
   * @memberOf auth.services.AuthService
   */
   service.register = function(user){
-    return $http.post('/api/v1/auth/login/', user);
+    return $http.post(host + '/api/v1/accounts/', user);
   }
 
-
 	serviec.logIn = function(user) {
-		return $http.post(url + '/login', user).then(loginSuccessFn, loginErrorFn);
+		return $http.post(host + '/api/v1/login', user).then(loginSuccessFn, loginErrorFn);
 
 		function loginSuccessFn(data, status, headers, config) {
-	    Authentication.setAuthenticatedAccount(data.data);
-	    window.location = '/';
+	    service.saveToken(data.token);
 	  }
 
 		function loginErrorFn(data, status, headers, config) {
@@ -35,27 +55,8 @@ angular.module('auth.services', [])
 	};
 
 	service.logOut = function() {
-		$window.localStorage.removeItem('beryl-client-token');
+		localStorage.removeItem(clientToken);
 	};
-
-	service.getAuthenticatedAccount = function () {
-			if (!$cookies.authenticatedAccount) {
-					return;
-			}
-			return JSON.parse($cookies.authenticatedAccount);
-	}
-
-	service.isAuthenticated = function() {
-			return !!$cookies.authenticatedAccount;
-	}
-
-	service.setAuthenticatedAccount = function(account) {
-			$cookies.authenticatedAccount = JSON.stringify(account);
-	}
-
-	service.unauthenticate = function() {
-			delete $cookies.authenticatedAccount;
-	}
 
   return service;
 }]);

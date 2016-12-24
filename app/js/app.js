@@ -11,6 +11,13 @@ angular.module('ocblApp', ['ui.router', 'auth'])
 		}
 		//controller : 'MainCtrl'
 	})
+	.state('profile', {
+		url : '/profile',
+		templateUrl : 'views/profile.html',
+		data:{
+			requireLogin: false
+		}
+	});
   $urlRouterProvider.otherwise('home');
 }])
 .run(['$rootScope','$state','$http', 'AuthService',function ($rootScope,$state,$http,AuthService) {

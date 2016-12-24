@@ -5,7 +5,8 @@ angular.module('auth', ['auth.controllers','ui.router'])
 	$stateProvider.state('login', {
 		url : '/login',
 		templateUrl : 'js/auth/views/login.html',
-		// controller : 'AuthCtrl',
+		controller : 'LoginCtrl',
+		controllerAs: 'vm'
 		// resolve: {
 		// 	confPromise: ['confService', function(confService){
 		// 		return userService.load();
@@ -15,7 +16,7 @@ angular.module('auth', ['auth.controllers','ui.router'])
   .state('register', {
 		url : '/register',
 		templateUrl : 'js/auth/views/register.html',
-		controller : 'AuthCtrl',
+		controller : 'RegisterCtrl',
 		controllerAs: 'vm'
 		// resolve: {
 		// 	confPromise: ['confService', function(confService){

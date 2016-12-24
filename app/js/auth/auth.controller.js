@@ -4,7 +4,7 @@ angular.module('auth.controllers', ['auth.services'])
 .controller('NavCtrl', [function(){
 
 }])
-.controller('AuthCtrl', ['$state', 'AuthService',
+.controller('RegisterCtrl', ['$state', 'AuthService',
 function($state, AuthService) {
   var vm = this;
 
@@ -12,14 +12,25 @@ function($state, AuthService) {
 
 	vm.register = function() {
 
-    AuthService.register(vm.user);
-		// authService.register($scope.user).error(function(error) {
-		// 	$scope.error = error;
-		// }).then(function() {
-		// 	$state.go('home');
-		// });
+    return AuthService.register(vm.user).then(registerSuccessFn, registerErrorFn);
+
+    function registerSuccessFn(data, status, headers, config) {
+      AuthService.login(email, password);
+    }
+
+    function registerErrorFn(data, status, headers, config) {
+      console.error('register failure!');
+    }
 	};
 
+  activate();
+
+  vm.activate = function() {
+    // If the user is authenticated, they should not be here.
+    if (AuthService.isAuthenticated()) {
+      $state.go('profile');
+    }
+  }
 	// $scope.logIn = function() {
 	// 	authService.logIn($scope.user).error(function(error) {
 	// 		$scope.error = error;
@@ -28,7 +39,7 @@ function($state, AuthService) {
 	// 	});
 	// };
 }])
-.controller('LoginController', ['$state', 'AuthService',
+.controller('LoginCtrl', ['$state', 'AuthService',
 function($state, AuthService) {
   var vm = this;
 
@@ -36,15 +47,15 @@ function($state, AuthService) {
 
   activate();
 
-  function activate() {
+  vm.activate = function() {
     // If the user is authenticated, they should not be here.
     if (AuthService.isAuthenticated()) {
-      $location.url('/');
+      $state.go('profile');
     }
   }
 
   vm.login = function(){
-    Authentication.login(vm.email, vm.password);
+    AuthService.login(vm.user);
   }
 
 }]);
